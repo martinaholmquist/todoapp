@@ -1,33 +1,31 @@
 package com.todo.todoapp.services;
 
-import com.todo.todoapp.auth.ChangePasswordRequest;
-import com.todo.todoapp.auth.Permission;
-import com.todo.todoapp.auth.Role;
-import com.todo.todoapp.config.LogoutService;
+
 import com.todo.todoapp.models.Todo;
 import com.todo.todoapp.models.User;
 import com.todo.todoapp.records.AllUserInformationRecord;
+import com.todo.todoapp.records.ChangePasswordReq;
 import com.todo.todoapp.records.UserViewRecord;
 import com.todo.todoapp.repositories.UserRepository;
+import com.todo.todoapp.token.TokenService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.security.Principal;
 import java.util.Collections;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 import java.util.stream.Collectors;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class UserService {
@@ -35,20 +33,21 @@ public class UserService {
     private final PasswordEncoder passwordEncoder;
     private final UserRepository repository;
     private final LogoutService logoutService;
+    private final TokenService tokenService;
+    private final ToDoService todoService;
 
-
-    public void changePassword(ChangePasswordRequest request, Principal connectedUser) {
+    public void changePassword(ChangePasswordReq request, Principal connectedUser) {
 
         var user = (User) ((UsernamePasswordAuthenticationToken) connectedUser).getPrincipal();
 
-        if (!passwordEncoder.matches(request.getCurrentPassword(), user.getPassword())) {
+        if (!passwordEncoder.matches(request.currentPassword(), user.getPassword())) {  //ändrat från.getCurrentPassword
             throw new IllegalStateException("Wrong password");
         }
-        if (!request.getNewPassword().equals(request.getConfirmationPassword())) {
+        if (!request.newPassword().equals(request.confirmationPassword())) {
             throw new IllegalStateException("Password are not the same");
         }
 
-        user.setPassword(passwordEncoder.encode(request.getNewPassword()));
+        user.setPassword(passwordEncoder.encode(request.newPassword()));
         repository.save(user);
     }
 
@@ -126,6 +125,24 @@ public class UserService {
         logoutService.logout(request, response, authentication);
     }
 
+
+    public void deleteusermanually(Principal connectedUser) {
+        try {
+            var ofConnectedUser = (User) ((UsernamePasswordAuthenticationToken) connectedUser).getPrincipal();
+            Integer userId = ofConnectedUser.getId();
+
+            tokenService.deleteTokensByUser(ofConnectedUser);
+            todoService.deleteTodosByUser(ofConnectedUser);
+            repository.deleteById(userId);
+        } catch (EmptyResultDataAccessException e) {
+
+            log.error("användaren finns ej i db: ", e);
+            e.printStackTrace();
+        } catch (Exception e) {
+            log.error("oväntat fel: ", e);
+            e.printStackTrace();
+        }
+    }
 
 }
 

@@ -1,11 +1,10 @@
 package com.todo.todoapp.controllers;
 
 
-import com.todo.todoapp.auth.ChangePasswordRequest;
-import com.todo.todoapp.config.LogoutService;
 
-import com.todo.todoapp.models.User;
-import com.todo.todoapp.records.AllUserInformationRecord;
+import com.todo.todoapp.records.ChangePasswordReq;
+import com.todo.todoapp.services.LogoutService;
+
 import com.todo.todoapp.records.UserViewRecord;
 
 import com.todo.todoapp.services.UserService;
@@ -14,13 +13,11 @@ import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 
 import java.security.Principal;
-import java.util.List;
 
 
 @RestController
@@ -33,7 +30,7 @@ public class UserController {
 
     @PatchMapping ("/changepassword")
     public ResponseEntity<?> changePassword(
-            @RequestBody ChangePasswordRequest request,
+            @RequestBody ChangePasswordReq request,
             Principal connectedUser
     ) {
         service.changePassword(request, connectedUser);

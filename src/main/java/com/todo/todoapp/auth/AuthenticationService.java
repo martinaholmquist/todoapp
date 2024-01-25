@@ -2,6 +2,8 @@ package com.todo.todoapp.auth;
 
 
 import com.todo.todoapp.config.JwtService;
+import com.todo.todoapp.records.AuthenticationReq;
+import com.todo.todoapp.records.RegisterReq;
 import com.todo.todoapp.token.Token;
 import com.todo.todoapp.token.TokenRepository;
 import com.todo.todoapp.token.TokenType;
@@ -23,12 +25,12 @@ public class AuthenticationService {
     private final JwtService jwtService;
     private final AuthenticationManager authenticationManager;
 
-    public AuthenticationResponse register(RegisterRequest request) {
+    public AuthenticationResponse register(RegisterReq request) {
         var user = User.builder()
-                .name(request.getUsername())
-                .email(request.getEmail())
-                .password(passwordEncoder.encode(request.getPassword()))
-                .role(request.getRole())
+                .name(request.username())  //ändrat från getUsername
+                .email(request.email())
+                .password(passwordEncoder.encode(request.password()))
+                .role(request.role())
                 .active(true)
                 //.role(Role.USER)
                 .build();
@@ -40,15 +42,15 @@ public class AuthenticationService {
                 .build();
     }
 
-    public AuthenticationResponse authenticate(AuthenticationRequest request) {
+    public AuthenticationResponse authenticate(AuthenticationReq request) {
         authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
-                        request.getEmail(),
-                        request.getPassword()
+                        request.email(),  //ändrade från .getEmail
+                        request.password()
                 )
         );
 
-        var user = repository.findByEmail(request.getEmail())
+        var user = repository.findByEmail(request.email())  //ändrade från .getEmail
                 .orElseThrow();  //handle correct exception and handle if exceptions
         var jwtToken = jwtService.generateToken(user);
         revokeAllUserTokens(user);

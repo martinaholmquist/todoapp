@@ -1,5 +1,7 @@
 package com.todo.todoapp.auth;
 
+import com.todo.todoapp.records.AuthenticationReq;
+import com.todo.todoapp.records.RegisterReq;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
@@ -22,13 +24,13 @@ public class AuthenticationController {
 
     @PostMapping("/register")
     public ResponseEntity<AuthenticationResponse> register(
-            @RequestBody RegisterRequest request
+            @RequestBody RegisterReq request
     ) {
         return ResponseEntity.ok(service.register(request));
     }
     @PostMapping("/authenticate")
     public ResponseEntity<AuthenticationResponse> authenticate(
-            @RequestBody AuthenticationRequest request
+            @RequestBody AuthenticationReq request
     ) {
         return ResponseEntity.ok(service.authenticate(request));
     }

@@ -1,6 +1,5 @@
 package com.todo.todoapp.controllers;
 
-import com.todo.todoapp.models.User;
 import com.todo.todoapp.records.AllUserInformationRecord;
 import com.todo.todoapp.services.UserService;
 import lombok.RequiredArgsConstructor;
@@ -11,8 +10,6 @@ import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
 import java.util.List;
-
-
 
 
 @CrossOrigin  //la till detta efter problem med cors i frontend.....
@@ -36,6 +33,16 @@ public class AdminController {
         } else {
             return new ResponseEntity<>(userRecords, HttpStatus.OK);
         }
+    }
+
+
+    @DeleteMapping ("/deleteusermanually")
+    //@PreAuthorize("hasAuthority('admin:delete')")
+    public ResponseEntity<?> deleteuser(
+            Principal connectedUser
+    ) {
+        service.deleteusermanually(connectedUser);
+        return ResponseEntity.ok("Deleted");
     }
 
 

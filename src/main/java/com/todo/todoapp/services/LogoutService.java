@@ -1,4 +1,4 @@
-package com.todo.todoapp.config;
+package com.todo.todoapp.services;
 
 
 import com.todo.todoapp.token.TokenRepository;

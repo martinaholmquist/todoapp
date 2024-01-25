@@ -1,10 +1,8 @@
 package com.todo.todoapp.controllers;
 
 
-import com.todo.todoapp.config.LogoutService;
 import com.todo.todoapp.models.Todo;
 import com.todo.todoapp.services.ToDoService;
-import com.todo.todoapp.services.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -13,7 +11,6 @@ import org.springframework.web.bind.annotation.*;
 import java.io.IOException;
 import java.security.Principal;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/tasks")

@@ -1,5 +1,6 @@
 package com.todo.todoapp.token;
 
+import com.todo.todoapp.models.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
@@ -18,5 +19,7 @@ public interface  TokenRepository extends JpaRepository<Token, Integer> {
 
     Optional<Token> findByToken(String token);
 
+
+    void deleteByUser(User user);
 
 }

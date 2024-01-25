@@ -56,5 +56,9 @@ public class ToDoService {
 
     }
 
+    public void deleteTodosByUser(User user) {
+        todoRepository.deleteByUser(user);
+    }
+
 
 }

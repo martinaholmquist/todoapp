@@ -14,6 +14,10 @@ public interface ToDoRepository extends JpaRepository<Todo, Integer> {
     @Query("SELECT f.task FROM Todo f")
     List<String> findAllTasks();
 
+    void deleteByUser(User user);
+
+
+
     //List<Todo> findAllTasks();
 
 }
