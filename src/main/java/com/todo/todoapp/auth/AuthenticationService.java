@@ -29,6 +29,7 @@ public class AuthenticationService {
                 .email(request.getEmail())
                 .password(passwordEncoder.encode(request.getPassword()))
                 .role(request.getRole())
+                .active(true)
                 //.role(Role.USER)
                 .build();
         var savedUser = repository.save(user);
@@ -46,6 +47,7 @@ public class AuthenticationService {
                         request.getPassword()
                 )
         );
+
         var user = repository.findByEmail(request.getEmail())
                 .orElseThrow();  //handle correct exception and handle if exceptions
         var jwtToken = jwtService.generateToken(user);
@@ -77,6 +79,8 @@ public class AuthenticationService {
         });
         tokenRepository.saveAll(validUserTokens);
     }
+
+
 
 
 }

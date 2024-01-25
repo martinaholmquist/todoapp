@@ -25,14 +25,8 @@ public class AdminController {
     private final UserService service;
 
 
-    @PostMapping("/adminupdatepermission")
-    public ResponseEntity<User> adminUpdatePermission(Principal connectedUser) {
-        User updatedUser = service.adminUpdatePermission(connectedUser);
-        return new ResponseEntity<>(updatedUser, HttpStatus.OK);
-    }
-
     @GetMapping("/alluserinfo")
-    @PreAuthorize("hasAuthority('admin:update')")
+    @PreAuthorize("hasAuthority('admin:read')")
     public ResponseEntity<List<AllUserInformationRecord>> AllUserInformationRecordOne() {
         List<AllUserInformationRecord> userRecords = service.allUserInformationRecord();
         if (userRecords.isEmpty()) {

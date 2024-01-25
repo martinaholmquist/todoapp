@@ -2,21 +2,30 @@ package com.todo.todoapp.services;
 
 import com.todo.todoapp.auth.ChangePasswordRequest;
 import com.todo.todoapp.auth.Permission;
+import com.todo.todoapp.auth.Role;
+import com.todo.todoapp.config.LogoutService;
 import com.todo.todoapp.models.Todo;
 import com.todo.todoapp.models.User;
 import com.todo.todoapp.records.AllUserInformationRecord;
 import com.todo.todoapp.records.UserViewRecord;
 import com.todo.todoapp.repositories.UserRepository;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.security.Principal;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
@@ -25,8 +34,7 @@ public class UserService {
 
     private final PasswordEncoder passwordEncoder;
     private final UserRepository repository;
-
-
+    private final LogoutService logoutService;
 
 
     public void changePassword(ChangePasswordRequest request, Principal connectedUser) {
@@ -43,7 +51,6 @@ public class UserService {
         user.setPassword(passwordEncoder.encode(request.getNewPassword()));
         repository.save(user);
     }
-
 
 
     public UserViewRecord findConnectedUser(Principal connectedUser) {
@@ -78,7 +85,6 @@ public class UserService {
     }
 
 
-
     public List<AllUserInformationRecord> allUserInformationRecord() {
         List<User> users = repository.findAll();
 
@@ -106,19 +112,19 @@ public class UserService {
 
 
 
-    public User adminUpdatePermission(Principal connectedUser) {
-        var ofConnectedUser = (User) ((UsernamePasswordAuthenticationToken) connectedUser).getPrincipal();
 
-        User userToUpdate = repository.findByEmail(ofConnectedUser.getEmail())
+    public void deactivateAccount(Principal connectedUser, HttpServletRequest request,
+                                  HttpServletResponse response) {
+        var ofConnectedUser = (User) ((UsernamePasswordAuthenticationToken) connectedUser).getPrincipal();
+        User userToDeactivate = repository.findByEmail(ofConnectedUser.getEmail())
                 .orElseThrow(() -> new RuntimeException("User not found in my method...."));
 
-        if (!userToUpdate.getRole().getPermissions().contains(Permission.ADMIN_UPDATE)) {
-            userToUpdate.getRole().getPermissions().add(Permission.ADMIN_UPDATE);
-            repository.save(userToUpdate);
-        }  return ofConnectedUser;
+        userToDeactivate.setActive(false);
+        repository.save(userToDeactivate);
+
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        logoutService.logout(request, response, authentication);
     }
-
-
 
 
 }

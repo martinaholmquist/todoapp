@@ -10,11 +10,6 @@ public enum Permission {
     ADMIN_CREATE("admin:create"),
     ADMIN_DELETE("admin:delete"),
 
-    USER_READ("user:read"),
-
-    USER_CREATE("user:create"),
-
-    USER_UPDATE("user:update"),
     ;
 
 

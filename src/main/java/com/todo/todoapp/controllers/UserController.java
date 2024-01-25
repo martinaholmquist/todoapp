@@ -31,7 +31,7 @@ public class UserController {
     private final UserService service;
     private final LogoutService logoutService;
 
-    @PatchMapping
+    @PatchMapping ("/changepassword")
     public ResponseEntity<?> changePassword(
             @RequestBody ChangePasswordRequest request,
             Principal connectedUser
@@ -48,12 +48,18 @@ public class UserController {
     }
 
 
-
-
     @PostMapping("/logout")
     public ResponseEntity<String> logout(HttpServletRequest request, HttpServletResponse response, Authentication authentication) {
         logoutService.logout(request, response, authentication);
         return ResponseEntity.ok("Logged out successfully");
+    }
+
+
+
+    @PostMapping("/deactivateaccount")
+    public ResponseEntity<String> deactivateAccount(Principal connectedUser, HttpServletRequest request, HttpServletResponse response) {
+        service.deactivateAccount(connectedUser, request, response);
+        return ResponseEntity.ok("Deactivateaccount successfully");
     }
 
 
