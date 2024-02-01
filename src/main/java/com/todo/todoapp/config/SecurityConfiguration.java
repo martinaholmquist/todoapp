@@ -33,10 +33,11 @@ public class SecurityConfiguration {
                 .cors(Customizer.withDefaults())
                 .authorizeHttpRequests(req ->
                         req
-                               //.requestMatchers(DELETE, "/api/delete").hasAnyAuthority(ADMIN_DELETE.name())
+                               //.requestMatchers(DELETE, "/api/deleteuser").hasAnyAuthority(ADMIN_DELETE.name())
                                 .requestMatchers("/api/auth/register").permitAll()
                                 .requestMatchers("/api/auth/authenticate").permitAll()
-
+                                .requestMatchers("/api/users/alluserinfo").permitAll()
+                                .requestMatchers("/api/tasks/alltasks").permitAll()
                                 .anyRequest()
                                 .authenticated()
                 )

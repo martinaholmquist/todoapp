@@ -2,6 +2,7 @@ package com.todo.todoapp.controllers;
 
 
 
+import com.todo.todoapp.records.AllUserInformationRecord;
 import com.todo.todoapp.records.ChangePasswordReq;
 import com.todo.todoapp.services.LogoutService;
 
@@ -18,6 +19,7 @@ import org.springframework.web.bind.annotation.*;
 
 
 import java.security.Principal;
+import java.util.List;
 
 
 @RestController
@@ -59,8 +61,17 @@ public class UserController {
         return ResponseEntity.ok("Deactivateaccount successfully");
     }
 
+    @GetMapping("/alluserinfo")
+    public ResponseEntity<List<AllUserInformationRecord>> AllUserInformationRecord() {
+        List<AllUserInformationRecord> userRecords = service.allUserInformationRecord();
+        if (userRecords.isEmpty()) {
+            System.out.println("Här kommer userRecords:" + userRecords);
+            return new ResponseEntity<>(userRecords, HttpStatus.NO_CONTENT);
 
-
+        } else {
+            return new ResponseEntity<>(userRecords, HttpStatus.OK);
+        }
+    }
 
 
 }

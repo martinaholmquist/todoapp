@@ -7,7 +7,6 @@ import com.todo.todoapp.records.AllUserInformationRecord;
 import com.todo.todoapp.records.ChangePasswordReq;
 import com.todo.todoapp.records.UserViewRecord;
 import com.todo.todoapp.repositories.UserRepository;
-import com.todo.todoapp.token.TokenService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
@@ -21,8 +20,13 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.security.Principal;
+import java.time.LocalDate;
+import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.util.Collections;
 import java.util.List;
+import java.util.Scanner;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -33,14 +37,13 @@ public class UserService {
     private final PasswordEncoder passwordEncoder;
     private final UserRepository repository;
     private final LogoutService logoutService;
-    private final TokenService tokenService;
-    private final ToDoService todoService;
+
 
     public void changePassword(ChangePasswordReq request, Principal connectedUser) {
 
         var user = (User) ((UsernamePasswordAuthenticationToken) connectedUser).getPrincipal();
 
-        if (!passwordEncoder.matches(request.currentPassword(), user.getPassword())) {  //ändrat från.getCurrentPassword
+        if (!passwordEncoder.matches(request.currentPassword(), user.getPassword())) {
             throw new IllegalStateException("Wrong password");
         }
         if (!request.newPassword().equals(request.confirmationPassword())) {
@@ -52,6 +55,41 @@ public class UserService {
     }
 
 
+    public UserViewRecord findConnectedUser(Principal connectedUser) {
+        var ofConnectedUser = (User) ((UsernamePasswordAuthenticationToken) connectedUser).getPrincipal();
+
+        return repository.findByEmail(ofConnectedUser.getEmail())
+                .map(user -> {
+                    List<Todo> userTodos = user.getTodos(); // Change from getTodo() to getTodos()
+
+                    // Get tasks as a list of strings
+                    List<String> tasks = userTodos.stream()
+                            .map(Todo::getTask)
+                            .collect(Collectors.toList());
+
+                    // Get authorities from SecurityContextHolder
+                    List<String> authorities = SecurityContextHolder
+                            .getContext()
+                            .getAuthentication()
+                            .getAuthorities()
+                            .stream()
+                            .map(GrantedAuthority::getAuthority)
+                            .collect(Collectors.toList());
+
+                    return new UserViewRecord(
+                            user.getId(),
+                            user.getName(),
+                            user.getEmail(),
+                            user.getPassword(),
+                            user.getRole(),
+                            tasks, // Change from task to tasks
+                            authorities
+                    );
+                })
+                .orElseThrow(() -> new RuntimeException("User not found in my method...."));
+    }
+
+    /*
     public UserViewRecord findConnectedUser(Principal connectedUser) {
         var ofConnectedUser = (User) ((UsernamePasswordAuthenticationToken) connectedUser).getPrincipal();
 
@@ -81,27 +119,32 @@ public class UserService {
                     );
                 })
                 .orElseThrow(() -> new RuntimeException("User not found in my method...."));
-    }
+    }*/
 
 
     public List<AllUserInformationRecord> allUserInformationRecord() {
         List<User> users = repository.findAll();
 
         if (users.isEmpty()) {
-            // If no users, return empty list
             return Collections.emptyList();
         }
         List<AllUserInformationRecord> userRecords = users.stream()
                 .map(user -> {
-                    Todo todo = user.getTodo();
-                    String task = todo != null ? todo.getTask() : null;
+
+                    List<Todo> userTodos = user.getTodos(); // Change from getTodo() to getTodos()
+
+                    // Get tasks as a list of strings
+                    List<String> tasks = userTodos.stream()
+                            .map(Todo::getTask)
+                            .collect(Collectors.toList());
+
 
 
                     return new AllUserInformationRecord(
                             user.getId(),
                             user.getName(),
                             user.getEmail(),
-                            task
+                            tasks
                     );
                 })
                 .collect(Collectors.toList());
@@ -126,23 +169,25 @@ public class UserService {
     }
 
 
-    public void deleteusermanually(Principal connectedUser) {
+    public void deleteuser(Principal connectedUser) {
         try {
             var ofConnectedUser = (User) ((UsernamePasswordAuthenticationToken) connectedUser).getPrincipal();
             Integer userId = ofConnectedUser.getId();
 
-            tokenService.deleteTokensByUser(ofConnectedUser);
-            todoService.deleteTodosByUser(ofConnectedUser);
             repository.deleteById(userId);
         } catch (EmptyResultDataAccessException e) {
 
-            log.error("användaren finns ej i db: ", e);
+            log.error("no user in db: ", e);
             e.printStackTrace();
         } catch (Exception e) {
-            log.error("oväntat fel: ", e);
+            log.error("some error: ", e);
             e.printStackTrace();
         }
     }
+
+
+
+
 
 }
 

@@ -6,6 +6,9 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDate;
+import java.time.LocalTime;
+
 @Data
 @Builder
 @NoArgsConstructor
@@ -18,10 +21,14 @@ public class Todo {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
     private String task;
-    //private LocalDateTime scheduledTime;
+    private LocalDate dateoftask;
+    private LocalTime timeoftask;
+
+    private boolean isPerformed = false;
 
 
-    @OneToOne()
+
+    @ManyToOne()
     @JoinColumn(name = "user_id", referencedColumnName = "id")
     private User user;
 
@@ -30,8 +37,15 @@ public class Todo {
         return "Todo{" +
                 "id=" + id +
                 ", task='" + task + '\'' +
+                ", dateoftask='" + dateoftask + '\'' +
+                ", timeoftask='" + timeoftask + '\'' +
+                ", isPerformed='" + isPerformed + '\'' +
                 '}';
     }
+        /*
+    @OneToOne()
+    @JoinColumn(name = "user_id", referencedColumnName = "id")
+    private User user;*/
 
 }
 

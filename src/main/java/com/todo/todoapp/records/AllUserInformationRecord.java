@@ -1,4 +1,7 @@
 package com.todo.todoapp.records;
-public record AllUserInformationRecord(Integer id, String username, String email, String task) {
+
+import java.util.List;
+
+public record AllUserInformationRecord(Integer id, String username, String email, List<String> tasks) {
 }
 

@@ -16,7 +16,7 @@ public interface ToDoRepository extends JpaRepository<Todo, Integer> {
 
     void deleteByUser(User user);
 
-
+    List<Todo> findByUserEmail(String email);
 
     //List<Todo> findAllTasks();
 

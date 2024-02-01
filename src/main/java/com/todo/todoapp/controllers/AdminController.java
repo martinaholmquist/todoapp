@@ -12,7 +12,7 @@ import java.security.Principal;
 import java.util.List;
 
 
-@CrossOrigin  //la till detta efter problem med cors i frontend.....
+@CrossOrigin
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/api/admin")
@@ -22,6 +22,7 @@ public class AdminController {
     private final UserService service;
 
 
+    /*
     @GetMapping("/alluserinfo")
     @PreAuthorize("hasAuthority('admin:read')")
     public ResponseEntity<List<AllUserInformationRecord>> AllUserInformationRecordOne() {
@@ -33,15 +34,15 @@ public class AdminController {
         } else {
             return new ResponseEntity<>(userRecords, HttpStatus.OK);
         }
-    }
+    }*/
 
 
-    @DeleteMapping ("/deleteusermanually")
-    //@PreAuthorize("hasAuthority('admin:delete')")
+    @DeleteMapping ("/deleteuser")
+    @PreAuthorize("hasAuthority('admin:deleteuser')")
     public ResponseEntity<?> deleteuser(
             Principal connectedUser
     ) {
-        service.deleteusermanually(connectedUser);
+        service.deleteuser(connectedUser);
         return ResponseEntity.ok("Deleted");
     }
 
