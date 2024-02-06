@@ -23,9 +23,7 @@ public class TaskController {
 
     private final ToDoService service;
 
-
-
-
+//används i postman
     @GetMapping("/alltasks")
     public ResponseEntity<List<String>> listAllTasks() throws IOException {
         List<String> tasks = service.getTasks();
@@ -33,6 +31,9 @@ public class TaskController {
             return ResponseEntity.ok(tasks);
 
     }
+
+
+
 
 
 
@@ -61,6 +62,12 @@ public class TaskController {
     @PostMapping("/updatetaskperformed")
     public ResponseEntity<Void> updateTaskPerformed(@RequestBody UpdatePerformed request, Principal connectedUser) {
         service.updateTaskPerformed(request, connectedUser);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @PostMapping("/deletetask")
+    public ResponseEntity<Void> deleteTask(@RequestBody UpdatePerformed request, Principal connectedUser) {
+        service.deleteTask(request, connectedUser);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 

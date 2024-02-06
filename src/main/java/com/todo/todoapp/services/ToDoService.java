@@ -120,4 +120,14 @@ public class ToDoService {
         }
     }
 
+    public void deleteTask(UpdatePerformed request, Principal connectedUser) {
+        var ofConnectedUser = (User) ((UsernamePasswordAuthenticationToken) connectedUser).getPrincipal();
+        Optional<Todo> optionalToDo = todoRepository.findById(request.id());
+        optionalToDo.ifPresent(todo -> {
+            todoRepository.deleteById(request.id());
+        });
+        if (optionalToDo.isEmpty()) {
+            throw new RuntimeException("Todo not found in my method....");
+        }
+    }
 }

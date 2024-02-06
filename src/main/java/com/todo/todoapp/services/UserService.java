@@ -3,15 +3,12 @@ package com.todo.todoapp.services;
 
 import com.todo.todoapp.models.Todo;
 import com.todo.todoapp.models.User;
-import com.todo.todoapp.records.AllUserInformationRecord;
-import com.todo.todoapp.records.ChangePasswordReq;
-import com.todo.todoapp.records.UserViewRecord;
+import com.todo.todoapp.records.*;
 import com.todo.todoapp.repositories.UserRepository;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
@@ -20,13 +17,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.security.Principal;
-import java.time.LocalDate;
-import java.time.LocalTime;
-import java.time.format.DateTimeFormatter;
-import java.time.format.DateTimeParseException;
 import java.util.Collections;
 import java.util.List;
-import java.util.Scanner;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -89,38 +81,6 @@ public class UserService {
                 .orElseThrow(() -> new RuntimeException("User not found in my method...."));
     }
 
-    /*
-    public UserViewRecord findConnectedUser(Principal connectedUser) {
-        var ofConnectedUser = (User) ((UsernamePasswordAuthenticationToken) connectedUser).getPrincipal();
-
-        return repository.findByEmail(ofConnectedUser.getEmail())
-                .map(user -> {
-                    Todo userTodo = user.getTodo();
-                    String task = (userTodo != null) ? userTodo.getTask() : null;
-
-                    // Get authorities from SecurityContextHolder
-                    List<String> authorities = SecurityContextHolder
-                            .getContext()
-                            .getAuthentication()
-                            .getAuthorities()
-                            .stream()
-                            .map(GrantedAuthority::getAuthority)
-                            .collect(Collectors.toList());
-
-
-                    return new UserViewRecord(
-                            user.getId(),
-                            user.getName(),
-                            user.getEmail(),
-                            user.getPassword(),
-                            user.getRole(),
-                            task,
-                            authorities
-                    );
-                })
-                .orElseThrow(() -> new RuntimeException("User not found in my method...."));
-    }*/
-
 
     public List<AllUserInformationRecord> allUserInformationRecord() {
         List<User> users = repository.findAll();
@@ -144,7 +104,7 @@ public class UserService {
                             user.getId(),
                             user.getName(),
                             user.getEmail(),
-                            tasks
+                            user.isActive()
                     );
                 })
                 .collect(Collectors.toList());
@@ -153,9 +113,24 @@ public class UserService {
     }
 
 
+    /*
+    public void deactivateAccount(Principal connectedUser) {
+        var ofConnectedUser = (User) ((UsernamePasswordAuthenticationToken) connectedUser).getPrincipal();
+        User userToDeactivate = repository.findByEmail(ofConnectedUser.getEmail())
+                .orElseThrow(() -> new RuntimeException("User not found in my method...."));
+        userToDeactivate.setActive(false);
+        repository.save(userToDeactivate);
+    }
+    */
+
+    public void deleteUser(int id, Principal connectedUser) {
+            var ofConnectedUser = (User) ((UsernamePasswordAuthenticationToken) connectedUser).getPrincipal();
+            repository.deleteById(id);
+    }
 
 
-    public void deactivateAccount(Principal connectedUser, HttpServletRequest request,
+
+    public void deactivateAccountWithLogOut(Principal connectedUser, HttpServletRequest request,
                                   HttpServletResponse response) {
         var ofConnectedUser = (User) ((UsernamePasswordAuthenticationToken) connectedUser).getPrincipal();
         User userToDeactivate = repository.findByEmail(ofConnectedUser.getEmail())
@@ -169,21 +144,7 @@ public class UserService {
     }
 
 
-    public void deleteuser(Principal connectedUser) {
-        try {
-            var ofConnectedUser = (User) ((UsernamePasswordAuthenticationToken) connectedUser).getPrincipal();
-            Integer userId = ofConnectedUser.getId();
 
-            repository.deleteById(userId);
-        } catch (EmptyResultDataAccessException e) {
-
-            log.error("no user in db: ", e);
-            e.printStackTrace();
-        } catch (Exception e) {
-            log.error("some error: ", e);
-            e.printStackTrace();
-        }
-    }
 
 
 

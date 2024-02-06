@@ -22,10 +22,11 @@ import java.security.Principal;
 import java.util.List;
 
 
+@CrossOrigin
 @RestController
 @RequestMapping("/api/users")
 @RequiredArgsConstructor
-@CrossOrigin
+
 public class UserController {
     private final UserService service;
     private final LogoutService logoutService;
@@ -53,24 +54,17 @@ public class UserController {
         return ResponseEntity.ok("Logged out successfully");
     }
 
-
-
+    /*
     @PostMapping("/deactivateaccount")
-    public ResponseEntity<String> deactivateAccount(Principal connectedUser, HttpServletRequest request, HttpServletResponse response) {
-        service.deactivateAccount(connectedUser, request, response);
+    public ResponseEntity<String> deactivateAccount(Principal connectedUser) {
+        service.deactivateAccount(connectedUser);
         return ResponseEntity.ok("Deactivateaccount successfully");
-    }
+    }*/
 
-    @GetMapping("/alluserinfo")
-    public ResponseEntity<List<AllUserInformationRecord>> AllUserInformationRecord() {
-        List<AllUserInformationRecord> userRecords = service.allUserInformationRecord();
-        if (userRecords.isEmpty()) {
-            System.out.println("Här kommer userRecords:" + userRecords);
-            return new ResponseEntity<>(userRecords, HttpStatus.NO_CONTENT);
-
-        } else {
-            return new ResponseEntity<>(userRecords, HttpStatus.OK);
-        }
+    @PostMapping("/deactivateaccountwithlogout")
+    public ResponseEntity<String> deactivateAccountWithLogOut(Principal connectedUser, HttpServletRequest request, HttpServletResponse response) {
+        service.deactivateAccountWithLogOut(connectedUser, request, response);
+        return ResponseEntity.ok("Deactivateaccount successfully");
     }
 
 
