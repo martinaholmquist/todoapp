@@ -18,6 +18,6 @@ public interface ToDoRepository extends JpaRepository<Todo, Integer> {
 
     List<Todo> findByUserEmail(String email);
 
-    //List<Todo> findAllTasks();
+
 
 }

@@ -13,6 +13,8 @@ import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
 import java.security.Principal;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 @RestController
@@ -35,8 +37,6 @@ public class TaskController {
 
 
 
-
-
     @GetMapping("/mytasks")
     public ResponseEntity<List<TaskListRecord>> getTasks(Principal connectedUser) throws IOException {
         List<TaskListRecord> tasks = service.getTasks(connectedUser);
@@ -44,8 +44,12 @@ public class TaskController {
         if (tasks.isEmpty()) {
             System.out.println("Här kommer userRecords:" + tasks);
             return new ResponseEntity<>(tasks, HttpStatus.NO_CONTENT);
-
         } else {
+            // Sortera listan i datumordning och placera de som inte är utförda först
+            Collections.sort(tasks, Comparator
+                    .comparing(TaskListRecord::isPerformed)
+                    .thenComparing(TaskListRecord::dateoftask));
+
             return new ResponseEntity<>(tasks, HttpStatus.OK);
         }
     }

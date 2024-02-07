@@ -54,12 +54,6 @@ public class UserController {
         return ResponseEntity.ok("Logged out successfully");
     }
 
-    /*
-    @PostMapping("/deactivateaccount")
-    public ResponseEntity<String> deactivateAccount(Principal connectedUser) {
-        service.deactivateAccount(connectedUser);
-        return ResponseEntity.ok("Deactivateaccount successfully");
-    }*/
 
     @PostMapping("/deactivateaccountwithlogout")
     public ResponseEntity<String> deactivateAccountWithLogOut(Principal connectedUser, HttpServletRequest request, HttpServletResponse response) {

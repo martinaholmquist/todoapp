@@ -52,7 +52,7 @@ public class UserService {
 
         return repository.findByEmail(ofConnectedUser.getEmail())
                 .map(user -> {
-                    List<Todo> userTodos = user.getTodos(); // Change from getTodo() to getTodos()
+                    List<Todo> userTodos = user.getTodos();
 
                     // Get tasks as a list of strings
                     List<String> tasks = userTodos.stream()
@@ -74,7 +74,7 @@ public class UserService {
                             user.getEmail(),
                             user.getPassword(),
                             user.getRole(),
-                            tasks, // Change from task to tasks
+                            tasks,
                             authorities
                     );
                 })
@@ -91,7 +91,7 @@ public class UserService {
         List<AllUserInformationRecord> userRecords = users.stream()
                 .map(user -> {
 
-                    List<Todo> userTodos = user.getTodos(); // Change from getTodo() to getTodos()
+                    List<Todo> userTodos = user.getTodos();
 
                     // Get tasks as a list of strings
                     List<String> tasks = userTodos.stream()
@@ -113,15 +113,7 @@ public class UserService {
     }
 
 
-    /*
-    public void deactivateAccount(Principal connectedUser) {
-        var ofConnectedUser = (User) ((UsernamePasswordAuthenticationToken) connectedUser).getPrincipal();
-        User userToDeactivate = repository.findByEmail(ofConnectedUser.getEmail())
-                .orElseThrow(() -> new RuntimeException("User not found in my method...."));
-        userToDeactivate.setActive(false);
-        repository.save(userToDeactivate);
-    }
-    */
+
 
     public void deleteUser(int id, Principal connectedUser) {
             var ofConnectedUser = (User) ((UsernamePasswordAuthenticationToken) connectedUser).getPrincipal();

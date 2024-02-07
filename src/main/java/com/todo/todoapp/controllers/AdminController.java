@@ -11,10 +11,9 @@ import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
 import java.util.List;
-import java.util.UUID;
 
 
-//@CrossOrigin(origins = "http://localhost:3000/**", methods = {RequestMethod.GET, RequestMethod.DELETE}, allowedHeaders = "Authorization")
+
 @CrossOrigin
 @RequiredArgsConstructor
 @RestController
@@ -41,7 +40,6 @@ public class AdminController {
     }
 
 
-    //CrossOrigin(origins = "*", methods = { RequestMethod.DELETE }, allowedHeaders = "*")
     @DeleteMapping("/deleteuser/{id}")
     @PreAuthorize("hasAuthority('admin:delete')")
     public ResponseEntity<Void> deleteUser(@PathVariable int id, Principal connectedUser) {

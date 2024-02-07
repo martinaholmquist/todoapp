@@ -42,10 +42,7 @@ public class Todo {
                 ", isPerformed='" + isPerformed + '\'' +
                 '}';
     }
-        /*
-    @OneToOne()
-    @JoinColumn(name = "user_id", referencedColumnName = "id")
-    private User user;*/
+
 
 }
 

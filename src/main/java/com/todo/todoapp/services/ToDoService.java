@@ -3,29 +3,21 @@ package com.todo.todoapp.services;
 
 import com.todo.todoapp.models.Todo;
 import com.todo.todoapp.models.User;
-import com.todo.todoapp.records.ChangePasswordReq;
 import com.todo.todoapp.records.TaskListRecord;
 import com.todo.todoapp.records.UpdatePerformed;
-import com.todo.todoapp.records.UserViewRecord;
 import com.todo.todoapp.repositories.ToDoRepository;
 import com.todo.todoapp.repositories.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.web.authentication.preauth.PreAuthenticatedGrantedAuthoritiesUserDetailsService;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 import java.security.Principal;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.LocalTime;
-import java.time.format.DateTimeFormatter;
-import java.time.format.DateTimeParseException;
 import java.util.*;
-import java.util.stream.Collectors;
+
 
 @Slf4j
 @Service

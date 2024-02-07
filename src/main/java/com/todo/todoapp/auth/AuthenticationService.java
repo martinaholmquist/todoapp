@@ -27,7 +27,7 @@ public class AuthenticationService {
 
     public AuthenticationResponse register(RegisterReq request) {
         var user = User.builder()
-                .name(request.username())  //ändrat från getUsername
+                .name(request.username())
                 .email(request.email())
                 .password(passwordEncoder.encode(request.password()))
                 .role(request.role())
@@ -45,13 +45,13 @@ public class AuthenticationService {
     public AuthenticationResponse authenticate(AuthenticationReq request) {
         authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
-                        request.email(),  //ändrade från .getEmail
+                        request.email(),
                         request.password()
                 )
         );
 
-        var user = repository.findByEmail(request.email())  //ändrade från .getEmail
-                .orElseThrow();  //handle correct exception and handle if exceptions
+        var user = repository.findByEmail(request.email())
+                .orElseThrow();
         var jwtToken = jwtService.generateToken(user);
         revokeAllUserTokens(user);
         saveUserToken(user, jwtToken);

@@ -2,13 +2,11 @@ package com.todo.todoapp.auth;
 
 import com.todo.todoapp.records.AuthenticationReq;
 import com.todo.todoapp.records.RegisterReq;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.io.IOException;
+
 
 
 
