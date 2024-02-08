@@ -16,6 +16,10 @@ import static com.todo.todoapp.auth.Permission.ADMIN_DELETE;
 import static com.todo.todoapp.auth.Permission.ADMIN_READ;
 import static com.todo.todoapp.auth.Permission.ADMIN_UPDATE;
 
+import static com.todo.todoapp.auth.Permission.USER_CREATE;
+import static com.todo.todoapp.auth.Permission.USER_READ;
+import static com.todo.todoapp.auth.Permission.USER_UPDATE;
+
 @RequiredArgsConstructor
 public enum Role {
 
