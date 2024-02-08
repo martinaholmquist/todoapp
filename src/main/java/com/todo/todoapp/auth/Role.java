@@ -19,7 +19,15 @@ import static com.todo.todoapp.auth.Permission.ADMIN_UPDATE;
 @RequiredArgsConstructor
 public enum Role {
 
-    USER(Collections.emptySet()),
+    //USER(Collections.emptySet()),
+
+    USER(
+            Set.of(
+                    ADMIN_READ,
+                    ADMIN_UPDATE,
+                    ADMIN_CREATE
+            )
+    ),
 
     ADMIN(
             Set.of(
