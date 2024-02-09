@@ -5,6 +5,7 @@ The full application can be set up by combining both the frontend and backend re
 
 Frontend Repository
 The frontend of the TodoApp can be found in the following repository:
+https://github.com/martinaholmquist/todoappen
 
 This backend application serves as a secure and efficient foundation for the TodoApp, 
 handling user authentication, authorization, and task management seamlessly. 
