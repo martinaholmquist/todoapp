@@ -8,6 +8,7 @@ class TodoappApplicationTests {
 
 	@Test
 	void contextLoads() {
+		System.out.println("Skriver lite tester här :-)");
 	}
 
 }
